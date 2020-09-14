@@ -3,22 +3,7 @@ session_start();
 require "s_header.php";
 require "dbhandler.php";
 //echo $_SESSION['suserId'];
-!isset($_SESSION['suserId']) ? header("location:index.php"):null;
-$sql="select * from orders where s_name='$_SESSION[suserId]'";
-$result=mysqli_query($conn, $sql);
-if($result){
-	while($row=mysqli_fetch_array($result)){
-		$bname=$row['b_name'];
-		$ino=$row['itmno'];
-		$id=$row['od_id'];
-		$pno=$row['prod_quant'];
-	}
-}
-else{
-	echo mysqli_error($conn);
-}
-?>
-
+!isset($_SESSION['suserId']) ? header("location:index.php"):null;?>
 <div class="breadcrumbs">
             <div class="col-sm-4">
                 <div class="page-header float-left">
@@ -40,27 +25,42 @@ else{
 									  <th>Product Number</th>
 									  <th>Buyer Details</th>
 								  </tr>
-								  <?php
+<?php
+$sql="select * from orders where s_name='$_SESSION[suserId]'";
+$result=mysqli_query($conn, $sql);
+if($result){
+	while($row=mysqli_fetch_array($result)){
+		$bname=$row['b_name'];
+	
+	
 								  $qry2="select * from register where username='$bname'";
 								  $result2=mysqli_query($conn, $qry2);
 								  if($result2){
 									  while($row2=mysqli_fetch_array($result2)){
+										  $name=$row2['username'];
+										  $email=$row2['email'];
+										  $conct=$row2['phnNumber'];
+										  $addrs=$row2['address'];
+									  }
+}
+else{
+	echo mysqli_error($conn);
+}
 										  ?>
 										  <tr>
-										  <td><?php echo $id;?></td>
-										  <td><?php echo $ino;?></td>
-										  <td>Name : <?php echo $row2['username'];?><br />
-										  Quantity : <?php echo $pno?><br />
-										  Email : <?php echo $row2['email'];?><br />
-										  Contact No. : <?php echo $row2['phnNumber'];?><br />
-										  Address : <?php echo $row2['address'];?>
+										  <td><?php echo $row['od_id'];?></td>
+										  <td><?php echo $row['itmno'];?></td>
+										  <td>Name : <?php echo $name;?><br />
+										  Quantity : <?php echo $row['prod_quant'];?><br />
+										  Email : <?php echo $email;?><br />
+										  Contact No. : <?php echo $conct;?><br />
+										  Address : <?php echo $addrs;?>
 										  </td>
 										  </tr>
-										  
-										  
 										  <?php
-									  }
+									  
 								  }
+}
 								  else{
 									  echo mysqli_error($conn);
 									  echo "NO Orders Yet";
